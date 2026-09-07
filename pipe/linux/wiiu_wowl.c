@@ -129,6 +129,7 @@ static void region_country_code(uint8_t region, unsigned char country[WIIU_WOWL_
         break;
     case VANILLA_REGION_AMERICA:
     default:
+        /* North American Wii U country code */
         country[0] = 'U';
         country[1] = 'S';
         break;

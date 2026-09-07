@@ -129,8 +129,8 @@ static void region_country_code(uint8_t region, unsigned char country[WIIU_WOWL_
         break;
     case VANILLA_REGION_AMERICA:
     default:
-        country[0] = 'Q';
-        country[1] = '2';
+        country[0] = 'U';
+        country[1] = 'S';
         break;
     }
 }

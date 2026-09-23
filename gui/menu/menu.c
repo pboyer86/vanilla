@@ -89,6 +89,26 @@ void vpi_menu_action(vui_context_t *vui, vpi_extra_action_t action)
         }
         break;
     }
+    case VPI_ACTION_SLEEP:
+    {
+#if defined(__linux__) && !defined(ANDROID) && !defined(__ANDROID__)
+        const char *helper = "/usr/libexec/vanilla-power";
+        if (access(helper, X_OK) == 0) {
+            pthread_t thread;
+            int error = pthread_create(
+                &thread, NULL, run_volume_helper,
+                (void *) "/usr/libexec/vanilla-power sleep"
+            );
+            if (error == 0) {
+                error = pthread_detach(thread);
+            }
+            if (error != 0) {
+                vpilog("Failed to start power helper thread: %s\n", strerror(error));
+            }
+        }
+#endif
+        break;
+    }
     case VPI_ACTION_TOGGLE_FULLSCREEN:
     {
         vpi_config.fullscreen = !vpi_config.fullscreen;

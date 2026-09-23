@@ -259,7 +259,7 @@ void init_gamepad(vui_context_t *ctx)
     ctx->default_key_map[SDL_SCANCODE_F11] = VPI_ACTION_TOGGLE_FULLSCREEN;
     ctx->default_key_map[SDL_SCANCODE_ESCAPE] = VPI_ACTION_DISCONNECT;
 
-    ctx->default_key_map[SDL_SCANCODE_SLEEP] = VPI_ACTION_DISCONNECT; // Nintendo Switch power button
+    ctx->default_key_map[SDL_SCANCODE_SLEEP] = VPI_ACTION_SLEEP; // Nintendo Switch power button
     ctx->default_key_map[SDL_SCANCODE_VOLUMEUP] = VPI_ACTION_VOLUME_UP;
     ctx->default_key_map[SDL_SCANCODE_VOLUMEDOWN] = VPI_ACTION_VOLUME_DOWN;
 }

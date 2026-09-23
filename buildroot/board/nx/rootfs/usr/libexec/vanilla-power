@@ -1,0 +1,17 @@
+#!/bin/sh
+
+case "$1" in
+    sleep)
+        if ! grep -qw mem /sys/power/state; then
+            echo "Suspend-to-RAM is not supported" >&2
+            exit 1
+        fi
+
+        sync
+        echo mem > /sys/power/state
+        ;;
+    *)
+        echo "Usage: $0 sleep" >&2
+        exit 2
+        ;;
+esac

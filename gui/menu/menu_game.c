@@ -68,10 +68,36 @@ static struct {
 } menu_game_ctx;
 
 static _Atomic int vpi_game_queued_error = VANILLA_SUCCESS;
+static _Atomic int vpi_game_power_overlay;
+static int vpi_game_power_overlay_restore_mode;
+static _Atomic int vpi_game_force_menu;
+
+void vpi_game_power_overlay_set(vui_context_t *vui, int enabled)
+{
+    if (enabled) {
+        vpi_game_power_overlay_restore_mode = vui_game_mode_get(vui);
+        atomic_store(&vpi_game_power_overlay, 1);
+        vui_game_mode_set(vui, 0);
+    } else {
+        atomic_store(&vpi_game_power_overlay, 0);
+        vui_game_mode_set(vui, vpi_game_power_overlay_restore_mode);
+    }
+}
+
+int vpi_game_power_overlay_get(void)
+{
+    return atomic_load(&vpi_game_power_overlay);
+}
+
+void vpi_game_return_to_menu(void)
+{
+    atomic_store(&vpi_game_force_menu, 1);
+    vpi_game_shutdown();
+}
 
 void vpi_menu_game_exit(vui_context_t *vui, void *v)
 {
-    if (vpi_config.autoconnect == -1) {
+    if (atomic_exchange(&vpi_game_force_menu, 0) || vpi_config.autoconnect == -1) {
         vpi_menu_main(vui, v);
     } else {
         vpi_menu_do_quit(vui, v);
@@ -87,6 +113,7 @@ void back_to_main_menu(vui_context_t *vui, int button, void *v)
 void show_error(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     vui_enable_background(vui, 1);
 
@@ -826,7 +853,7 @@ static void vpi_publish_decoded_frame(vpi_decode_state_t *s)
 
     // Now that we have our first frame, switch UI to game mode if not already
     // FIXME: Not thread safe? Not a huge deal but might want to fix some day
-    if (!vui_game_mode_get(vui)) {
+    if (!vpi_game_power_overlay_get() && !vui_game_mode_get(vui)) {
         vui_game_mode_set(vui, 1);
         vui_audio_set_enabled(vui, 1);
     }
@@ -1200,6 +1227,7 @@ void vpi_menu_game_start(vui_context_t *vui, void *v)
     int console = (intptr_t) v;
 
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     vui_enable_background(vui, 0);
 

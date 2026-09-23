@@ -11,6 +11,7 @@
 #include "menu_common.h"
 #include "menu_game.h"
 #include "menu_main.h"
+#include "menu_power.h"
 #include "platform.h"
 
 #if defined(__linux__) && !defined(ANDROID) && !defined(__ANDROID__)
@@ -91,6 +92,10 @@ void vpi_menu_action(vui_context_t *vui, vpi_extra_action_t action)
     }
     case VPI_ACTION_SLEEP:
     {
+        if (vui_game_mode_get(vui)) {
+            vpi_menu_power_confirm(vui);
+            break;
+        }
 #if defined(__linux__) && !defined(ANDROID) && !defined(__ANDROID__)
         const char *helper = "/usr/libexec/vanilla-power";
         if (access(helper, X_OK) == 0) {
@@ -107,6 +112,11 @@ void vpi_menu_action(vui_context_t *vui, vpi_extra_action_t action)
             }
         }
 #endif
+        break;
+    }
+    case VPI_ACTION_POWER_MENU:
+    {
+        vpi_menu_power(vui);
         break;
     }
     case VPI_ACTION_TOGGLE_FULLSCREEN:

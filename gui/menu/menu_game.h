@@ -39,6 +39,10 @@ void vpi_menu_game(vui_context_t *vui, void *v);
 
 void vpi_game_shutdown();
 
+void vpi_game_power_overlay_set(vui_context_t *vui, int enabled);
+int vpi_game_power_overlay_get(void);
+void vpi_game_return_to_menu(void);
+
 void vpi_get_toast(int *number, char *output, size_t output_size, struct timeval *expiry_time);
 void vpi_show_toast(const char *message);
 

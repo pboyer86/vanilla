@@ -74,6 +74,7 @@ static void install_polkit_rule_cancel(vui_context_t *vui, int button, void *v)
 static void install_polkit_rule(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
 	tmp_fglayer = vui_layer_create(vui);
 
@@ -121,6 +122,7 @@ static void toggle_hwdec(vui_context_t *vui, int button, void *v)
 void vpi_menu_settings(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int fglayer = vui_layer_create(vui);
 

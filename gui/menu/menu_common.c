@@ -102,6 +102,7 @@ void vpi_menu_start_pipe(vui_context_t *vui, int fade_fglayer, vui_callback_t su
 int vpi_menu_show_error(vui_context_t *vui, int status, int fade_fglayer, vui_button_callback_t ok_action, void *ok_data)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
 
@@ -130,6 +131,7 @@ int vpi_menu_show_error(vui_context_t *vui, int status, int fade_fglayer, vui_bu
 void vpi_menu_do_quit(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
     vui_enable_background(vui, 0);
     vui_quit(vui);
 }

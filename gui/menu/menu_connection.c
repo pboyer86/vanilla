@@ -186,6 +186,7 @@ static void update_wireless_buttons(vui_context_t *vui)
 static void local_connection_menu(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);
@@ -239,6 +240,7 @@ static void check_ip_address(vui_context_t *vui, int btn, void *v)
 static void via_server_connection_menu(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);
@@ -284,6 +286,7 @@ void connection_btn_pressed(vui_context_t *vui, int btn, void *v)
 void vpi_menu_connection_and_return_to(vui_context_t *vui, int fade_fglayer, vui_callback_t success_callback, void *success_data, vui_callback_t fail_callback, void *fail_data)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);

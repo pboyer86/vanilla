@@ -121,6 +121,7 @@ static void dont_ask_again_btn_pressed(vui_context_t *vui, int btn, void *userda
 void vpi_menu_sudo(vui_context_t *vui, vui_callback_t success_action, void *success_data, vui_callback_t cancel_action, void *cancel_data, int fade_fglayer)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);

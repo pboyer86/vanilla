@@ -27,6 +27,7 @@ void vpi_menu_delete_return_to_main(vui_context_t *vui, int btn, void *v)
 void vpi_menu_delete_status(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);
@@ -61,6 +62,7 @@ void vpi_menu_delete_ok(vui_context_t *vui, int btn, void *v)
 void vpi_menu_delete(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);

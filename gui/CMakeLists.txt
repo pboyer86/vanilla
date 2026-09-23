@@ -321,6 +321,7 @@ list(APPEND VANILLA_GUI_SRC
     menu/menu_game.c
     menu/menu_gamepad.c
     menu/menu_main.c
+    menu/menu_power.c
     menu/menu_region.c
     menu/menu_rename.c
     menu/menu_settings.c

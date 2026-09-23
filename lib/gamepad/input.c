@@ -263,6 +263,7 @@ void send_input(int socket_hid, const struct sockaddr_in *addr, size_t addr_size
     if (current_buttons[VANILLA_BTN_L3]) button_mask |= 0x80;
     if (current_buttons[VANILLA_BTN_R3]) button_mask |= 0x40;
     if (current_buttons[VANILLA_BTN_TV]) button_mask |= 0x20;
+    if (current_buttons[VANILLA_BTN_POWER]) button_mask |= 0x02;
 
     ip.extra_buttons = button_mask;
 

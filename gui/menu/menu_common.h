@@ -6,6 +6,8 @@
 
 #define BTN_SZ 80
 
+void vpi_menu_power_reset(void);
+
 void vpi_menu_create_background(vui_context_t *vui, int layer, vui_rect_t *bkg_rect, int *margin);
 void vpi_menu_create_back_button(vui_context_t *vui, int layer, vui_button_callback_t action, void *action_data);
 

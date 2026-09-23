@@ -30,6 +30,7 @@ static void return_to_main(vui_context_t *vui, int btn, void *v)
 void vpi_menu_edit_nofade(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     bglayer = vui_layer_create(vui);
     fglayer = vui_layer_create(vui);

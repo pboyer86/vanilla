@@ -134,6 +134,7 @@ void cancel_sync(vui_context_t *vui, int button, void *v)
 void start_syncing(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int bglayer = vui_layer_create(vui);
     sync_fglayer = vui_layer_create(vui);
@@ -237,6 +238,7 @@ void vpi_menu_sync_start(vui_context_t *vui, void *d)
 {
     // Clears all extra layers
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     for (int i = 0; i < SYNC_BTN_COUNT; i++) {
         sync_entry_images[i] = -1;

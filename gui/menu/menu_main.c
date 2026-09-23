@@ -143,6 +143,7 @@ void vpi_menu_main_settings_button_action(vui_context_t *vui, int btn, void *v)
 void vpi_menu_main(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     vui_enable_background(vui, 1);
 

@@ -534,6 +534,8 @@ int vui_sdl_event_thread(void *data)
     vui_sdl_context_t *sdl_ctx = (vui_sdl_context_t *) vui->platform_data;
 
     SDL_Event ev;
+    static Uint32 power_press_started;
+    static int power_press_active;
     // while (!vui->quit) {
         // while (SDL_WaitEventTimeout(&ev, 100)) {
         while (SDL_PollEvent(&ev)) {
@@ -736,7 +738,19 @@ int vui_sdl_event_thread(void *data)
                         vanilla_btn = vui->default_key_map[key_idx];
                     }
 
-                    if (vanilla_btn > VPI_ACTION_START_INDEX) {
+                    if (vanilla_btn == VPI_ACTION_SLEEP) {
+                        if (ev.type == SDL_KEYDOWN && !ev.key.repeat) {
+                            power_press_started = SDL_GetTicks();
+                            power_press_active = 1;
+                        } else if (ev.type == SDL_KEYUP && power_press_active) {
+                            Uint32 held_ms = SDL_GetTicks() - power_press_started;
+                            power_press_active = 0;
+                            vpi_menu_action(
+                                vui,
+                                held_ms >= 800 ? VPI_ACTION_POWER_MENU : VPI_ACTION_SLEEP
+                            );
+                        }
+                    } else if (vanilla_btn > VPI_ACTION_START_INDEX) {
                         if (ev.type == SDL_KEYDOWN)
                             vpi_menu_action(vui, (vpi_extra_action_t) vanilla_btn);
                     } else if (vanilla_btn != -1) {

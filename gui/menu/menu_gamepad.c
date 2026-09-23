@@ -136,6 +136,7 @@ static int create_key_bind_button(vui_context_t *vui, int vanilla_btn, int x, in
 void vpi_menu_key_bindings_more(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
     reset_active_bind_button();
     reset_map_button_list();
 
@@ -179,6 +180,7 @@ void vpi_menu_key_bindings_more(vui_context_t *vui, void *v)
 void vpi_menu_key_bindings(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
     reset_active_bind_button();
     reset_map_button_list();
 
@@ -265,6 +267,7 @@ void vpi_menu_key_bindings(vui_context_t *vui, void *v)
 void vpi_menu_gamepad(vui_context_t *vui, void *v)
 {
     vui_reset(vui);
+    vpi_menu_power_reset();
 
     int layer = vui_layer_create(vui);
 

@@ -161,24 +161,18 @@ static void create_power_layers(vui_context_t *vui)
 
     vui_button_create(
         vui, x, y + (height + gap) * 2, width, height,
-        lang(VPI_LANG_POWER_VANILLA_MENU), 0,
-        VUI_BUTTON_STYLE_BUTTON, power_layer,
-        power_vanilla_menu, NULL);
-
-    vui_button_create(
-        vui, x, y + (height + gap) * 3, width, height,
         lang(VPI_LANG_POWER_HEKATE), 0,
         VUI_BUTTON_STYLE_BUTTON, power_layer,
         power_hekate, NULL);
 
     vui_button_create(
-        vui, x, y + (height + gap) * 4, width, height,
+        vui, x, y + (height + gap) * 3, width, height,
         lang(VPI_LANG_POWER_OFF_SWITCH), 0,
         VUI_BUTTON_STYLE_BUTTON, power_layer,
         power_off, NULL);
 
     vui_button_create(
-        vui, x, y + (height + gap) * 5, width, height,
+        vui, x, y + (height + gap) * 4, width, height,
         lang(VPI_LANG_CANCEL_BTN), 0,
         VUI_BUTTON_STYLE_BUTTON, power_layer,
         power_cancel, NULL);

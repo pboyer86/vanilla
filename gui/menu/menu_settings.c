@@ -38,11 +38,6 @@ static void transition_to_region(vui_context_t *vui, int button, void *v)
     vui_transition_fade_layer_out(vui, layer, vpi_menu_region, 0);
 }
 
-static void thunk_to_quit(vui_context_t *vui, int button, void *v)
-{
-    vpi_menu_quit_vanilla(vui);
-}
-
 #ifdef VANILLA_POLKIT_AVAILABLE
 static void do_polkit_install(vui_context_t *vui, void *v)
 {
@@ -165,9 +160,6 @@ void vpi_menu_settings(vui_context_t *vui, void *v)
 	SETTINGS_ACTION[sc] = toggle_cursor_in_fullscreen;
     sc++;
 #else
-    SETTINGS_NAMES[sc] = VPI_LANG_QUIT;
-    SETTINGS_ACTION[sc] = thunk_to_quit;
-    sc++;
 #endif
 
     // Polkit option (if on a platform that supports polkit)

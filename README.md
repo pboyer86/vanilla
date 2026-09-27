@@ -252,6 +252,18 @@ A controller is recommended, but Vanilla also supports keyboard input.
 
 ---
 
+## upstream / credits
+
+This project is based on the original **Vanilla** Wii U GamePad project:
+
+[vanilla-wiiu/vanilla](https://github.com/vanilla-wiiu/vanilla)
+
+Credit goes to the original Vanilla developers and contributors for the core Wii U GamePad implementation.
+
+This fork focuses on the Nintendo Switch experience and adds Switch-specific power management, screenshots, region defaults, sleep behavior, and other quality-of-life improvements.
+
+---
+
 ## building from source
 
 This repository contains the complete source used for the release build.
@@ -274,15 +286,3 @@ cd vanilla
 mkdir build && cd build
 cmake ..
 cmake --build . --parallel
-
----
-
-## upstream / credits
-
-This project is based on the original **Vanilla** Wii U GamePad project:
-
-[vanilla-wiiu/vanilla](https://github.com/vanilla-wiiu/vanilla)
-
-Credit goes to the original Vanilla developers and contributors for the core Wii U GamePad implementation.
-
-This fork focuses on the Nintendo Switch experience and adds Switch-specific power management, screenshots, region defaults, sleep behavior, and other quality-of-life improvements.

@@ -45,6 +45,16 @@ Use the release ZIP, not GitHub's automatically generated source code ZIP.
 
 ---
 
+## requirements
+
+- Modded Nintendo Switch or Nintendo Switch Lite
+- Hekate
+- SD card
+- Wii U console
+- Wii U must be powered on for syncing and connection
+
+---
+
 ## installation
 
 The release ZIP contains:
@@ -264,3 +274,15 @@ cd vanilla
 mkdir build && cd build
 cmake ..
 cmake --build . --parallel
+
+---
+
+## upstream / credits
+
+This project is based on the original **Vanilla** Wii U GamePad project:
+
+[vanilla-wiiu/vanilla](https://github.com/vanilla-wiiu/vanilla)
+
+Credit goes to the original Vanilla developers and contributors for the core Wii U GamePad implementation.
+
+This fork focuses on the Nintendo Switch experience and adds Switch-specific power management, screenshots, region defaults, sleep behavior, and other quality-of-life improvements.

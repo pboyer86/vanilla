@@ -62,6 +62,8 @@ void vui_reset(vui_context_t *ctx)
 	ctx->layer_enabled[0] = 1;
     ctx->selected_button = -1;
     ctx->cancel_button = -1;
+    ctx->modal_layer = -1;
+    ctx->modal_cancel_button = -1;
     ctx->active_textedit = -1;
 	vui_audio_set_enabled(ctx, 0);
     if (ctx->text_open_handler)
@@ -157,6 +159,21 @@ void vui_button_update_enabled(vui_context_t *ctx, int index, int enabled)
     }
 }
 
+static int vui_layer_is_interactive(vui_context_t *ctx, int layer);
+
+void vui_button_select(vui_context_t *ctx, int button)
+{
+    if (button < 0 || button >= ctx->button_count)
+        return;
+
+    vui_button_t *btn = &ctx->buttons[button];
+
+    if (btn->visible && btn->enabled &&
+        vui_layer_is_interactive(ctx, btn->layer))
+        ctx->selected_button = button;
+}
+
+
 void vui_button_update_checked(vui_context_t *ctx, int index, int checked)
 {
     vui_button_t *btn = &ctx->buttons[index];
@@ -238,6 +255,14 @@ void vui_button_update_style(vui_context_t *ctx, int index, vui_button_style_t s
     btn->style = style;
 }
 
+static int vui_layer_is_interactive(vui_context_t *ctx, int layer)
+{
+    if (!ctx->layer_enabled[layer])
+        return 0;
+
+    return ctx->modal_layer < 0 || layer == ctx->modal_layer;
+}
+
 void vui_select_direction(vui_context_t *ctx, vui_direction_t dir)
 {
     int cx, cy;
@@ -273,7 +298,8 @@ void vui_select_direction(vui_context_t *ctx, vui_direction_t dir)
 
     for (int i = 0; i < ctx->button_count; i++) {
         vui_button_t *b = &ctx->buttons[i];
-        if (b->visible && b->enabled) {
+        if (b->visible && b->enabled &&
+            vui_layer_is_interactive(ctx, b->layer)) {
             int valid = 0;
 
             // Determine what "direction" this button is in
@@ -397,7 +423,9 @@ void vui_process_mousedown(vui_context_t *ctx, int x, int y)
     for (int i = 0; i < ctx->button_count; i++) {
         vui_button_t *btn = &ctx->buttons[i];
 
-        if (btn->visible && btn->enabled && point_inside_button(btn, x, y) && ctx->layer_enabled[btn->layer]) {
+        if (btn->visible && btn->enabled &&
+            point_inside_button(btn, x, y) &&
+            vui_layer_is_interactive(ctx, btn->layer)) {
             press_button(ctx, i);
             button_pressed = 1;
             break;
@@ -409,7 +437,9 @@ void vui_process_mousedown(vui_context_t *ctx, int x, int y)
         for (int i = 0; i < ctx->textedit_count; i++) {
             vui_textedit_t *edit = &ctx->textedits[i];
 
-            if (edit->visible && edit->enabled && point_inside_textedit(edit, x, y) && ctx->layer_enabled[edit->layer]) {
+            if (edit->visible && edit->enabled &&
+                point_inside_textedit(edit, x, y) &&
+                vui_layer_is_interactive(ctx, edit->layer)) {
                 new_active_textedit = i;
                 break;
             }
@@ -674,6 +704,15 @@ void vui_layer_set_opacity(vui_context_t *ctx, int layer, float opacity)
 void vui_layer_set_enabled(vui_context_t *ctx, int layer, int enabled)
 {
 	ctx->layer_enabled[layer] = enabled;
+}
+
+void vui_layer_set_modal(vui_context_t *ctx, int layer, int cancel_button)
+{
+    ctx->modal_layer = layer;
+    ctx->modal_cancel_button = cancel_button;
+
+    /* Never carry selection from the screen underneath a modal. */
+    ctx->selected_button = -1;
 }
 
 vui_color_t vui_color_create(float r, float g, float b, float a)
@@ -984,26 +1023,42 @@ void vui_process_keydown(vui_context_t *ctx, int button)
     case VANILLA_BTN_A:
     case VANILLA_BTN_PLUS:
         if (ctx->selected_button != -1) {
-            press_button(ctx, ctx->selected_button);
-        } else if (ctx->button_count == 1) {
-            press_button(ctx, 0);
-        } else {
-            for (int i = 0; i < ctx->button_count; i++) {
-                vui_button_t *b = &ctx->buttons[i];
-                if (b->enabled && b->visible) {
-                    ctx->selected_button = i;
-                    break;
-                }
+            vui_button_t *b = &ctx->buttons[ctx->selected_button];
+
+            if (b->enabled && b->visible &&
+                vui_layer_is_interactive(ctx, b->layer)) {
+                press_button(ctx, ctx->selected_button);
+                break;
+            }
+
+            ctx->selected_button = -1;
+        }
+
+        for (int i = 0; i < ctx->button_count; i++) {
+            vui_button_t *b = &ctx->buttons[i];
+
+            if (b->enabled && b->visible &&
+                vui_layer_is_interactive(ctx, b->layer)) {
+                ctx->selected_button = i;
+                break;
             }
         }
         break;
-    case VANILLA_BTN_B:
-        if (ctx->cancel_button != -1) {
-            press_button(ctx, ctx->cancel_button);
-        } else if (ctx->button_count == 1) {
-            press_button(ctx, 0);
+
+    case VANILLA_BTN_B: {
+        int cancel = ctx->modal_layer >= 0
+                   ? ctx->modal_cancel_button
+                   : ctx->cancel_button;
+
+        if (cancel != -1) {
+            vui_button_t *b = &ctx->buttons[cancel];
+
+            if (b->enabled && b->visible &&
+                vui_layer_is_interactive(ctx, b->layer))
+                press_button(ctx, cancel);
         }
         break;
+    }
     }
 }
 

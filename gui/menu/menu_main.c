@@ -1,4 +1,5 @@
 #include "menu_main.h"
+#include "menu_power.h"
 
 #include <stdio.h>
 
@@ -192,4 +193,6 @@ void vpi_menu_main(vui_context_t *vui, void *v)
     } else {
         vui_transition_fade_layer_in(vui, layer, NULL, NULL);
     }
+
+    vpi_menu_power_main_ready();
 }

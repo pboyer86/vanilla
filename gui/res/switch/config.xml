@@ -4,7 +4,7 @@
 	<server>FFFFFFFF</server>
 	<wireless>wlan0</wireless>
 	<connectionsetup>1</connectionsetup>
-	<region>0</region>
+	<region>1</region>
 	<swapabxy>0</swapabxy>
 	<fullscreen>1</fullscreen>
 	<fastdrm>0</fastdrm>

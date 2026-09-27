@@ -60,7 +60,6 @@ static const char *lang_str[__VPI_LANG_T_COUNT] = {
     "Hardware Decoding",
     "Cursor In Full Screen",
     "Local connection on Android requires root access.",
-    "Power",
     "Turn off the Wii U and put the Switch to sleep?",
     "Turn Off Wii U + Sleep",
     "Sleep Switch",

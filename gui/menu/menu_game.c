@@ -71,6 +71,7 @@ static _Atomic int vpi_game_queued_error = VANILLA_SUCCESS;
 static _Atomic int vpi_game_power_overlay;
 static int vpi_game_power_overlay_restore_mode;
 static _Atomic int vpi_game_force_menu;
+static _Atomic int vpi_game_session_active;
 
 void vpi_game_power_overlay_set(vui_context_t *vui, int enabled)
 {
@@ -89,6 +90,11 @@ int vpi_game_power_overlay_get(void)
     return atomic_load(&vpi_game_power_overlay);
 }
 
+int vpi_game_session_is_active(void)
+{
+    return atomic_load(&vpi_game_session_active);
+}
+
 void vpi_game_return_to_menu(void)
 {
     atomic_store(&vpi_game_force_menu, 1);
@@ -97,6 +103,8 @@ void vpi_game_return_to_menu(void)
 
 void vpi_menu_game_exit(vui_context_t *vui, void *v)
 {
+    atomic_store(&vpi_game_session_active, 0);
+
     if (atomic_exchange(&vpi_game_force_menu, 0) || vpi_config.autoconnect == -1) {
         vpi_menu_main(vui, v);
     } else {
@@ -1234,6 +1242,7 @@ void vpi_menu_game_start(vui_context_t *vui, void *v)
     menu_game_ctx.last_power_time = 0;
 
     // Set initial values
+    atomic_store(&vpi_game_session_active, 0);
     vanilla_set_region(vpi_config.region);
 
     vpi_console_entry_t *entry = vpi_config.connected_console_entries + console;
@@ -1241,6 +1250,8 @@ void vpi_menu_game_start(vui_context_t *vui, void *v)
     if (r != VANILLA_SUCCESS) {
         show_error(vui, (void*)(intptr_t) r);
     } else {
+        atomic_store(&vpi_game_session_active, 1);
+
         char buf[100];
         snprintf(buf, sizeof(buf), lang(VPI_LANG_CONNECTING_TO), entry->name);
 

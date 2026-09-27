@@ -13,6 +13,7 @@
 #include <vanilla.h>
 #include <libavutil/hwcontext.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #ifdef ANDROID
 #include <libavcodec/mediacodec.h>
@@ -139,6 +140,7 @@ typedef struct {
 	vui_power_state_t last_power_state;
 
 	uint16_t last_vibration_state;
+        int screenshot_requested;
 } vui_sdl_context_t;
 
 #ifdef VANILLA_NVV4L2_AVAILABLE
@@ -200,6 +202,42 @@ typedef struct {
 #endif
 
 static int vibrate = 0;
+
+
+static void vui_sdl_save_screenshot(vui_sdl_context_t *sdl_ctx)
+{
+    const char *dir = "/mnt/switchroot/vanilla/screenshots";
+    char path[256];
+    int index = 1;
+    int w, h;
+
+    mkdir(dir, 0755);
+
+    do {
+        snprintf(path, sizeof(path), "%s/vanilla-%04d.png", dir, index++);
+    } while (access(path, F_OK) == 0 && index < 10000);
+
+    if (SDL_GetRendererOutputSize(sdl_ctx->renderer, &w, &h) != 0)
+        return;
+
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(
+        0, w, h, 32, SDL_PIXELFORMAT_ARGB8888);
+    if (!surface)
+        return;
+
+    if (SDL_RenderReadPixels(
+            sdl_ctx->renderer,
+            NULL,
+            SDL_PIXELFORMAT_ARGB8888,
+            surface->pixels,
+            surface->pitch) == 0 &&
+        IMG_SavePNG(surface, path) == 0) {
+        vpi_show_toast("Screenshot saved");
+    }
+
+    SDL_FreeSurface(surface);
+}
+
 
 void init_gamepad(vui_context_t *ctx)
 {
@@ -637,6 +675,14 @@ int vui_sdl_event_thread(void *data)
             if (sdl_ctx->controller && ev.cdevice.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(sdl_ctx->controller))) {
                     int btn_idx = ev.cbutton.button;
                     int vanilla_btn;
+
+                    if (ev.cbutton.state == SDL_PRESSED &&
+                        (btn_idx == SDL_CONTROLLER_BUTTON_LEFTSTICK ||
+                         btn_idx == SDL_CONTROLLER_BUTTON_RIGHTSTICK) &&
+                        SDL_GameControllerGetButton(sdl_ctx->controller, SDL_CONTROLLER_BUTTON_LEFTSTICK) &&
+                        SDL_GameControllerGetButton(sdl_ctx->controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) {
+                        sdl_ctx->screenshot_requested = 1;
+                    }
 
                     // First try to read from config. If unmapped, fallback to default.
                     vanilla_btn = vpi_config.buttonmap[btn_idx];
@@ -2573,6 +2619,11 @@ int vui_update_sdl(vui_context_t *vui)
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, main_tex, NULL, dst_rect);
+
+        if (sdl_ctx->screenshot_requested) {
+            sdl_ctx->screenshot_requested = 0;
+            vui_sdl_save_screenshot(sdl_ctx);
+        }
 
         // Flip surfaces
         SDL_RenderPresent(renderer);

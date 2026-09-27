@@ -21,6 +21,14 @@ cp /vanilla/gui/res/switch/vanilla.ini /install/bootloader/ini/
 # Image.gz and zImage are both gzip compressed kernel data and are identical. Use Image.gz because buildroot doesn't support zImage on aarch64 for some reason.
 /build/host/bin/mkimage -A arm64 -O linux -T kernel -C gzip -a 0x80200000 -e 0x80200000 -d /build/images/Image.gz /install/switchroot/vanilla/uImage
 
+# Disable charger-triggered suspend wake on Switch Lite (Vali).
+# Preserve BM92T charging/USB-C functionality; remove only PMC WAKE14.
+VALI_DTB=/build/build/linux-linux-theofficialgman-8-15-2026/arch/arm64/boot/dts/tegra210b01-vali.dtb
+/build/host/bin/dtc -I dtb -O dts "$VALI_DTB" -o /tmp/vanilla-vali.dts
+sed -i '/nvidia,pmc-wakeup = <.*0xe.*>;/d' /tmp/vanilla-vali.dts
+/build/host/bin/dtc -I dts -O dtb /tmp/vanilla-vali.dts -o "$VALI_DTB"
+rm -f /tmp/vanilla-vali.dts
+
 # Create combined device tree
 
 wget https://android.googlesource.com/platform/system/libufdt/+archive/refs/heads/master/utils.tar.gz

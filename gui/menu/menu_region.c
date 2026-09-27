@@ -25,9 +25,17 @@ static void region_clicked(vui_context_t *vui, int btn, void *v)
     vpi_config.region = reg;
     vpi_config_save();
 
+    const int region_order[MAX_REGIONS] = {
+        VANILLA_REGION_AMERICA,
+        VANILLA_REGION_EUROPE,
+        VANILLA_REGION_JAPAN
+    };
+
     for (int i = 0; i < MAX_REGIONS; i++) {
         int b = region_btns[i];
-        vui_button_update_checked(vui, b, vpi_config.region == i);
+        vui_button_update_checked(
+            vui, b,
+            vpi_config.region == region_order[i]);
     }
 
     return_to_settings(vui, btn, 0);
@@ -56,10 +64,29 @@ void vpi_menu_region(vui_context_t *vui, void *v)
     const int btn_y = bkg_rect.y + bkg_rect.h * 13 / 32;
     const int btn_x = bkg_rect.x + bkg_rect.w/2 - btn_w/2;
 
+    const int region_order[MAX_REGIONS] = {
+        VANILLA_REGION_AMERICA,
+        VANILLA_REGION_EUROPE,
+        VANILLA_REGION_JAPAN
+    };
+
+    const int region_labels[MAX_REGIONS] = {
+        VPI_LANG_REGION_AMERICA,
+        VPI_LANG_REGION_EUROPE,
+        VPI_LANG_REGION_JAPAN
+    };
+
     for (int i = 0; i < MAX_REGIONS; i++) {
-        int b = vui_button_create(vui, btn_x, btn_y + BTN_SZ * i, btn_w, BTN_SZ, lang(VPI_LANG_REGION_JAPAN + i), 0, VUI_BUTTON_STYLE_BUTTON, fglayer, region_clicked, (void *) (intptr_t) i);
+        int region = region_order[i];
+
+        int b = vui_button_create(
+            vui, btn_x, btn_y + BTN_SZ * i, btn_w, BTN_SZ,
+            lang(region_labels[i]), 0,
+            VUI_BUTTON_STYLE_BUTTON, fglayer,
+            region_clicked, (void *) (intptr_t) region);
+
         vui_button_update_checkable(vui, b, 1);
-        vui_button_update_checked(vui, b, vpi_config.region == i);
+        vui_button_update_checked(vui, b, vpi_config.region == region);
         region_btns[i] = b;
     }
 

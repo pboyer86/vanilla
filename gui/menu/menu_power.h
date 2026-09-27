@@ -6,5 +6,6 @@
 void vpi_menu_power(vui_context_t *vui);
 void vpi_menu_power_confirm(vui_context_t *vui);
 void vpi_menu_power_reset(void);
+void vpi_menu_power_main_ready(void);
 
 #endif

@@ -140,6 +140,8 @@ typedef struct vui_context_t {
     void *key_override_handler_data;
     int selected_button;
     int cancel_button;
+    int modal_layer;
+    int modal_cancel_button;
     vui_font_height_handler_t font_height_handler;
     void *font_height_handler_data;
     vui_text_open_handler_t text_open_handler;

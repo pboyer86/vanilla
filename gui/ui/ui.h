@@ -90,6 +90,7 @@ void vui_set_fullscreen(vui_context_t *ctx, int enabled);
 int vui_layer_create(vui_context_t *ctx);
 void vui_layer_set_opacity(vui_context_t *ctx, int layer, float opacity);
 void vui_layer_set_enabled(vui_context_t *ctx, int layer, int enabled);
+void vui_layer_set_modal(vui_context_t *ctx, int layer, int cancel_button);
 void vui_layer_set_bgcolor(vui_context_t *ctx, int layer, vui_color_t color);
 int vui_layer_destroy(vui_context_t *ctx);
 
@@ -109,6 +110,7 @@ void vui_button_update_text(vui_context_t *ctx, int button, const char *text);
 void vui_button_update_style(vui_context_t *ctx, int button, vui_button_style_t style);
 void vui_button_update_visible(vui_context_t *ctx, int button, int visible);
 void vui_button_update_enabled(vui_context_t *ctx, int button, int enabled);
+void vui_button_select(vui_context_t *ctx, int button);
 void vui_button_update_checked(vui_context_t *ctx, int button, int checked);
 void vui_button_update_checkable(vui_context_t *ctx, int button, int checkable);
 void vui_button_set_cancel(vui_context_t *ctx, int button);
